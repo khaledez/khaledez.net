@@ -1,0 +1,13 @@
+---
+- hosts: do-london
+  remote_user: khaled
+  become: yes
+  
+  tasks:
+    - name: ensure nginx is installed
+      apt:
+        name: nginx
+        state: latest
+    - service:
+        name: nginx
+        state: started
