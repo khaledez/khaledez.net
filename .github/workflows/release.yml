@@ -1,5 +1,8 @@
 name: Create release package
-on: [push]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   release:
