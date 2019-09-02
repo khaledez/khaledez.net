@@ -9,9 +9,14 @@ jobs:
     name: Create a release package
     runs-on: ubuntu-18.04
     steps:
-      - name: Print Hello
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - name: create ZIP
         env:
-          NAME: Khaled
-        run: 
-          import os; dir(os)
-          shell: python
+          GITHUB_TOKEN: {{ Secrets.GITHUB_TOKEN }}
+          ASSET_NAME: khaledez.net.tar.gz
+        run: |
+          tar -zcvf $ASSET_NAME index.html
+          echo $GITHUB_WORKPLACE
+
