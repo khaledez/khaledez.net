@@ -2,7 +2,7 @@ name: Create release package
 on:
   push:
     branches:
-      - develop
+      - feature-automate-release
 
 jobs:
   release:
@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 1
       - name: create ZIP
         env:
-          GITHUB_TOKEN: {{ Secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ASSET_NAME: khaledez.net.tar.gz
         run: |
           tar -zcvf $ASSET_NAME index.html
