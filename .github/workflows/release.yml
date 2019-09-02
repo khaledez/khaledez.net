@@ -12,4 +12,6 @@ jobs:
       - name: Print Hello
         env:
           NAME: Khaled
-        run: echo "Hello, $NAME"
+        run: 
+          import os; dir(os)
+          shell: python
