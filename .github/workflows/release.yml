@@ -1,0 +1,12 @@
+name: Create release package
+on : push
+
+jobs:
+  release:
+    name: Create a release package
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Print Hello
+        env: 
+          NAME: Khaled
+        run: echo "Hello, $NAME"
