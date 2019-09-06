@@ -6,17 +6,11 @@ on:
 
 jobs:
   release:
-    name: Create a release package
+    name: package
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - name: create ZIP
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ASSET_NAME: khaledez.net.tar.gz
-        run: |
-          tar -zcvf $ASSET_NAME index.html
-          echo $GITHUB_WORKPLACE
+      - uses: ./
 
