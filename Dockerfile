@@ -12,5 +12,4 @@ RUN npm install
 ADD . .
 RUN npm run build
 
-RUN mkdir /release \
-    && tar -C public/ -czvf /release/website-latest.tgz ./
+ENTRYPOINT [ "workflows/release/entrypoint.sh" ]

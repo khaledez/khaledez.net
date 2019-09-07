@@ -12,5 +12,14 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - uses: ./
-
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: npm install, test
+        run: |
+          npm install
+          npm run build --if-present
+          npm test
+        env:
+          CI: true
