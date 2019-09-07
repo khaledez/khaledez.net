@@ -23,3 +23,8 @@ jobs:
           npm test
         env:
           CI: true
+      - name: create package
+        run: |
+          tar -C public/ -czvf website-latest.tgz ./
+          ls
+          env
