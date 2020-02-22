@@ -1,4 +1,4 @@
-name: Create release package
+name: release website
 on:
   push:
     branches:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: package
+    name: build and publish
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -23,9 +23,6 @@ jobs:
           npm test
         env:
           CI: true
-      - name: create package
-        run: |
-          tar -C public/ -czvf website-latest.tgz ./
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -36,4 +33,5 @@ jobs:
       
       - name: Copy files to S3 with AWS CLI
         run: |
-          aws s3 sync public/ s3://net.khaledez.www
+          aws s3 sync public/ s3://net.khaledez.www --acl public-read
+          aws s3 website s3://net.khaledez.www --index-document index.html --error-document error.html
