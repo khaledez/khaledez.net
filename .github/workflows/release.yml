@@ -26,5 +26,14 @@ jobs:
       - name: create package
         run: |
           tar -C public/ -czvf website-latest.tgz ./
-          ls
-          env
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2 # London
+      
+      - name: Copy files to S3 with AWS CLI
+        run: |
+          aws s3 sync public/ s3://net.khaledez.www
