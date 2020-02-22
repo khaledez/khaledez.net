@@ -2,7 +2,7 @@ name: release website
 on:
   push:
     branches:
-      - feature-automate-release
+      - master
 
 jobs:
   release:
