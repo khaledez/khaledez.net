@@ -9,6 +9,7 @@ jobs:
     env:
       domain: dev.khaledez.net
     steps:
+        - run: cat $GITHUB_EVENT_PATH
         - uses: actions/checkout@v1
           with:
             fetch-depth: 1
