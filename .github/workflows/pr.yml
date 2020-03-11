@@ -61,8 +61,10 @@ jobs:
 
         - name: Fetch Terraform state
           uses: actions/download-artifact@v1
+          continue-on-error: true
           with:
             name: ${{ format('pr-tfstate-{0}', github.event.pull_request.number) }}
+            path: terraform/terraform.tfstate
 
         - name: Terraform Apply
           id: 'terraform_apply'

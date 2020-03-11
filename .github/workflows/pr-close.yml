@@ -21,6 +21,7 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: ${{ format('pr-tfstate-{0}', github.event.pull_request.number) }}
+          path: terraform/terraform.tfstate
           
       - name: Terraform destroy
         id: 'terraform_destroy'
