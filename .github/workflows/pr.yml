@@ -61,4 +61,4 @@ jobs:
             tf_actions_comment: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            TF_VAR_bucket_name: ${{ join('pr-', github.pull_request.number, '.', $domain, '') }}
+            TF_VAR_bucket_name: ${{ join('pr-', github.pull_request.number, '.', domain, '') }}
