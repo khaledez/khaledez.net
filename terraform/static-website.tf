@@ -1,9 +1,9 @@
 provider "aws" {
-    region = "eu-west-2"
+  region = "eu-west-2"
 }
 
 variable "bucket_name" {
-    description = "Bucket name"
+  description = "Bucket name"
 }
 
 resource "aws_s3_bucket" "s3_website" {
