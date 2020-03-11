@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       domain: dev.khaledez.net
+      bucket_name: ${{ format('pr-{0}.{1}', github.event.pull_request.number, env.domain) }}
     steps:
         - uses: actions/checkout@v1
           with:
@@ -59,14 +60,14 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: eu-west-2 # London
 
-        - name: 'Terraform Plan'
-          id: 'terraform_plan'
+        - name: 'Terraform Apply'
+          id: 'terraform_apply'
           uses: hashicorp/terraform-github-actions@master
           with:
             tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'plan'
+            tf_actions_subcommand: 'apply'
             tf_actions_working_dir: 'terraform/'
             tf_actions_comment: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            TF_VAR_bucket_name: ${{ format('pr-{0}.{1}', github.event.pull_request.number, env.domain) }}
+            TF_VAR_bucket_name: ${{ env.bucket_name }}
