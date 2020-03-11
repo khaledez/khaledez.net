@@ -16,14 +16,6 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: 12.x
-        - name: yarn install, test
-          run: |
-            yarn install
-            yarn test
-            yarn build --if-present
-          env:
-            CI: true
-        - run: env
         - name: 'Terraform Format'
           uses: hashicorp/terraform-github-actions@master
           with:
@@ -51,6 +43,21 @@ jobs:
             tf_actions_comment: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+        - name: yarn install, test
+          run: |
+            yarn install
+            yarn test
+            yarn build --if-present
+          env:
+            CI: true
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
         - name: 'Terraform Plan'
           id: 'terraform_plan'
           uses: hashicorp/terraform-github-actions@master
