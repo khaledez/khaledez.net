@@ -70,4 +70,4 @@ jobs:
             tf_actions_comment: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            TF_VAR_bucket_name: ${{ format('pr-{0}.{1}', github.pull_request.number, env.domain) }}
+            TF_VAR_bucket_name: ${{ format('pr-{0}.{1}', github.number, env.domain) }}
