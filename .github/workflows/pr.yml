@@ -1,0 +1,61 @@
+name: PR website
+on:
+  pull_request
+
+jobs:
+  build:
+    name: build and deploy
+    runs-on: ubuntu-18.04
+    steps:
+        - uses: actions/checkout@v1
+          with:
+            fetch-depth: 1
+        - name: setup node
+          uses: actions/setup-node@v1
+          with:
+            node-version: 12.x
+        - name: yarn install, test
+          run: |
+            yarn install
+            yarn test
+            yarn build --if-present
+          env:
+            CI: true
+        - run: env
+        - name: 'Terraform Format'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'fmt'
+            tf_actions_working_dir: 'terraform/'
+            tf_actions_comment: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: 'Terraform Init'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'init'
+            tf_actions_working_dir: 'terraform/'
+            tf_actions_comment: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: 'Terraform Validate'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'validate'
+            tf_actions_working_dir: 'terraform/'
+            tf_actions_comment: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: 'Terraform Plan'
+          id: 'terraform_plan'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'plan'
+            tf_actions_working_dir: 'terraform/'
+            tf_actions_comment: true
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
