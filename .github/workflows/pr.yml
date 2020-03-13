@@ -79,5 +79,4 @@ jobs:
 
       - name: Copy files to S3 with AWS CLI
         run: |
-          aws s3 sync public/ s3://${{ env.domain_name }} --acl public-read
-          aws s3 website s3://${{ env.domain_name }} --index-document index.html --error-document index.html
+          aws s3 sync public/ s3://${{ env.domain_name }}
