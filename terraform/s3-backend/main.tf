@@ -7,6 +7,8 @@ variable "bucket_name" {
   default     = "net.khaledez.terraform.backend"
 }
 
+data "aws_caller_identity" "current" {}
+
 data "aws_iam_policy_document" "terraform_policy" {
   statement {
     effect    = "Allow"
@@ -14,8 +16,11 @@ data "aws_iam_policy_document" "terraform_policy" {
     resources = ["arn:aws:s3:::${var.bucket_name}"]
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::427368570714:user/github"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::427368570714:user/github",
+        "${data.aws_caller_identity.current.arn}"
+      ]
     }
   }
 
@@ -25,8 +30,11 @@ data "aws_iam_policy_document" "terraform_policy" {
     resources = ["arn:aws:s3:::${var.bucket_name}/*"]
 
     principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::427368570714:user/github"]
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::427368570714:user/github",
+        "${data.aws_caller_identity.current.arn}"
+      ]
     }
   }
 }
