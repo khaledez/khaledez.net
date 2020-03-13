@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "net.khaledez.terraform.bucket"
+    region = "eu-west-2"
+    key    = var.bucket_name
+  }
+}
+
 provider "aws" {
   region = "eu-west-2"
 }

@@ -1,6 +1,6 @@
 name: PR website
-on:
-  pull_request
+on: 
+  - pull_request
 
 jobs:
   build:
@@ -16,33 +16,6 @@ jobs:
           uses: actions/setup-node@v1
           with:
             node-version: 12.x
-        - name: 'Terraform Format'
-          uses: hashicorp/terraform-github-actions@master
-          with:
-            tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'fmt'
-            tf_actions_working_dir: 'terraform/'
-            tf_actions_comment: true
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        - name: 'Terraform Init'
-          uses: hashicorp/terraform-github-actions@master
-          with:
-            tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'init'
-            tf_actions_working_dir: 'terraform/'
-            tf_actions_comment: true
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        - name: 'Terraform Validate'
-          uses: hashicorp/terraform-github-actions@master
-          with:
-            tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'validate'
-            tf_actions_working_dir: 'terraform/'
-            tf_actions_comment: true
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
         - name: yarn install, test
           run: |
@@ -59,29 +32,17 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: eu-west-2 # London
 
-        - name: Fetch Terraform state
-          uses: actions/download-artifact@v1
-          continue-on-error: true
-          with:
-            name: ${{ format('pr-tfstate-{0}', github.event.pull_request.number) }}
-            path: terraform/terraform.tfstate
-
         - name: Terraform Apply
           id: 'terraform_apply'
           uses: hashicorp/terraform-github-actions@master
           with:
             tf_actions_version: 0.12.13
             tf_actions_subcommand: 'apply'
-            tf_actions_working_dir: 'terraform/'
+            tf_actions_working_dir: 'terraform/static-website'
             tf_actions_comment: true
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TF_VAR_bucket_name: ${{ env.domain_name }}
-        - name: Persist Terraform state
-          uses: actions/upload-artifact@v1
-          with:
-            name: ${{ format('pr-tfstate-{0}', github.event.pull_request.number) }}
-            path: terraform/terraform.tfstate
 
         - name: Copy files to S3 with AWS CLI
           run: |
