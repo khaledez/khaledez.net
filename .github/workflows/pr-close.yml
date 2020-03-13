@@ -46,4 +46,4 @@ jobs:
       
       - name: Delete Terraform state
         run: |
-          echo "aws s3 rm s3://${{ env.terraform_backend_bucket }}/pr/${{ env.domain_name }}"
+          aws s3 rm s3://${{ env.terraform_backend_bucket }}/pr/${{ env.domain_name }}
