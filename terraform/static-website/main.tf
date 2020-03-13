@@ -7,6 +7,7 @@ terraform {
 
 provider "aws" {
   region = "eu-west-2"
+  version = "~> 2.53"
 }
 
 variable "bucket_name" {

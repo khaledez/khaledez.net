@@ -58,7 +58,6 @@ jobs:
             tf_actions_subcommand: "validate"
             tf_actions_working_dir: "terraform/static-website"
             tf_actions_comment: true
-            args: '-backend-config="key=${{ env.domain_name }}"'
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -70,7 +69,6 @@ jobs:
             tf_actions_subcommand: 'apply'
             tf_actions_working_dir: 'terraform/static-website'
             tf_actions_comment: true
-            args: '-backend-config="key=${{ env.domain_name }}"'
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TF_VAR_bucket_name: ${{ env.domain_name }}
