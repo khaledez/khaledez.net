@@ -11,14 +11,17 @@ jobs:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
       terraform_dir: "terraform/static-website"
       terraform_version: 0.12.13
+      terraform_backend_bucket: net.khaledez.terraform.backend
     steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2 # London
-      - run: env
       - name: Terraform Init
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -40,3 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_bucket_name: ${{ env.domain_name }}
+      
+      - name: Delete Terraform state
+        run: |
+          echo "aws s3 rm s3://${{ env.terraform_backend_bucket }}/pr/${{ env.domain_name }}"

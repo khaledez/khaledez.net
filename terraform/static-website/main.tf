@@ -15,8 +15,9 @@ variable "bucket_name" {
 }
 
 resource "aws_s3_bucket" "s3_website" {
-  bucket = var.bucket_name
-  acl    = "public-read"
+  bucket        = var.bucket_name
+  acl           = "public-read"
+  force_destroy = true
 
   website {
     index_document = "index.html"
