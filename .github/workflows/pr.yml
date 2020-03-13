@@ -52,7 +52,7 @@ jobs:
           tf_actions_subcommand: "init"
           tf_actions_working_dir: "${{ env.terraform_dir }}"
           tf_actions_comment: true
-          args: '-backend-config="key=${{ env.domain_name }}"'
+          args: '-backend-config="key=pr/${{ env.domain_name }}"'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Terraform Validate
