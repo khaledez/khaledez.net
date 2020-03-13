@@ -7,9 +7,33 @@ variable "bucket_name" {
   default     = "net.khaledez.terraform.backend"
 }
 
+data "aws_iam_policy_document" "terraform_policy" {
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::${var.bucket_name}"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::427368570714:user/github"]
+    }
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["s3:GetObject", "s3:PutObject"]
+    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::427368570714:user/github"]
+    }
+  }
+}
+
 resource "aws_s3_bucket" "backend" {
   bucket = var.bucket_name
-  acl    = "private"
+  policy = data.aws_iam_policy_document.terraform_policy.json
 
   versioning {
     enabled = true
@@ -18,5 +42,6 @@ resource "aws_s3_bucket" "backend" {
   tags = {
     Description = "Backend for terraform state"
     Environment = "PROD"
+    App         = "net.khaledez.terraform"
   }
 }

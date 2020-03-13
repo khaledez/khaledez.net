@@ -1,8 +1,7 @@
 terraform {
   backend "s3" {
-    bucket = "net.khaledez.terraform.bucket"
+    bucket = "net.khaledez.terraform.backend"
     region = "eu-west-2"
-    key    = var.bucket_name
   }
 }
 
