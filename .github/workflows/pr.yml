@@ -32,7 +32,7 @@ jobs:
 
       - name: yarn install, test
         run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn test
           yarn build --if-present
         env:
