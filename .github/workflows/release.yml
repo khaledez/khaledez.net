@@ -33,9 +33,9 @@ jobs:
 
       - name: npm install, test
         run: |
-          npm install
-          npm run build --if-present
-          npm test
+          yarn install --frozen-lockfile
+          yarn build --if-present
+          yarn test
         env:
           CI: true
 
@@ -76,7 +76,9 @@ jobs:
           tf_actions_comment: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_VAR_bucket_name: ${{ env.domain_name }}
+          TF_VAR_domain_name: ${{ env.domain_name }}
+          TF_VAR_cache_ttl: 3600
+          TF_VAR_environment: prod
 
       - name: Copy files to S3 with AWS CLI
         run: |
