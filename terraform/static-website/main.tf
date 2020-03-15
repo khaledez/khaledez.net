@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "cf_website" {
     }
   }
 
-  aliases = [var.domain_name]
+  aliases    = [var.domain_name]
   depends_on = [aws_acm_certificate_validation.validate_cert]
 
   default_cache_behavior {
