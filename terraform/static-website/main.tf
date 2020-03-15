@@ -177,6 +177,7 @@ resource "aws_acm_certificate" "domain_cert" {
 }
 
 resource "aws_acm_certificate_validation" "validate_cert" {
+  provider                = aws.virginia
   certificate_arn         = aws_acm_certificate.domain_cert.arn
   validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
 }
