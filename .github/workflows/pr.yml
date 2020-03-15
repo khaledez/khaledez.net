@@ -32,7 +32,7 @@ jobs:
 
       - name: yarn install, test
         run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn test
           yarn build --if-present
         env:
@@ -75,7 +75,7 @@ jobs:
           tf_actions_comment: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TF_VAR_bucket_name: ${{ env.domain_name }}
+          TF_VAR_domain_name: ${{ env.domain_name }}
 
       - name: Copy files to S3 with AWS CLI
         run: |
