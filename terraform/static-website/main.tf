@@ -10,6 +10,12 @@ provider "aws" {
   version = "~> 2.53"
 }
 
+provider "aws" {
+  alias   = "virginia"
+  region  = "us-east-1"
+  version = "~> 2.53"
+}
+
 variable "domain_name" {
   description = "Domain name"
 }
@@ -128,6 +134,8 @@ resource "aws_cloudfront_distribution" "cf_website" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+    ssl_support_method             = "sni-only"
+    acm_certificate_arn            = aws_acm_certificate.domain_cert.arn
   }
 }
 
@@ -158,6 +166,7 @@ resource "aws_route53_record" "cert_validation" {
 }
 
 resource "aws_acm_certificate" "domain_cert" {
+  provider          = aws.virginia
   domain_name       = var.domain_name
   validation_method = "DNS"
   tags              = local.common_tags
