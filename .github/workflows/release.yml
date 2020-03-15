@@ -77,6 +77,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}
+          TF_VAR_cache_ttl: 3600
+          TF_VAR_environment: prod
 
       - name: Copy files to S3 with AWS CLI
         run: |
