@@ -45,9 +45,6 @@ locals {
     Environment = var.environment
     App         = var.app_name
   }
-
-  domain_parts = split(".", var.domain_name)
-  base_domain  = join(".", slice(local.domain_parts, 1, length(local.domain_parts)))
 }
 
 resource "aws_s3_bucket" "s3_website" {
