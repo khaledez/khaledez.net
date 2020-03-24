@@ -1,12 +1,3 @@
-provider "aws" {
-  region = "eu-west-2"
-}
-
-variable "bucket_name" {
-  description = "backend bucket name"
-  default     = "net.khaledez.terraform.backend"
-}
-
 data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "terraform_policy" {
