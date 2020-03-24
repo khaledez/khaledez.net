@@ -134,8 +134,8 @@ resource "aws_cloudfront_distribution" "cf_website" {
   tags = local.common_tags
 
   viewer_certificate {
-    ssl_support_method             = "sni-only"
-    acm_certificate_arn            = data.aws_acm_certificate.domain_cert.arn
+    ssl_support_method  = "sni-only"
+    acm_certificate_arn = data.aws_acm_certificate.domain_cert.arn
   }
 }
 
