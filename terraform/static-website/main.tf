@@ -154,31 +154,6 @@ resource "aws_route53_record" "www" {
   }
 }
 
-resource "aws_route53_record" "cert_validation" {
-  name    = aws_acm_certificate.domain_cert.domain_validation_options.0.resource_record_name
-  type    = aws_acm_certificate.domain_cert.domain_validation_options.0.resource_record_type
-  zone_id = data.aws_route53_zone.primary.id
-  records = [aws_acm_certificate.domain_cert.domain_validation_options.0.resource_record_value]
-  ttl     = 60
-}
-
-resource "aws_acm_certificate" "domain_cert" {
-  provider          = aws.virginia
-  domain_name       = var.domain_name
-  validation_method = "DNS"
-  tags              = local.common_tags
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_acm_certificate_validation" "validate_cert" {
-  provider                = aws.virginia
-  certificate_arn         = aws_acm_certificate.domain_cert.arn
-  validation_record_fqdns = [aws_route53_record.cert_validation.fqdn]
-}
-
 output "domain_name" {
   value = aws_cloudfront_distribution.cf_website.domain_name
 }
