@@ -5,7 +5,7 @@ provider "aws" {
 
 variable "domains" {
   description = "Domains to apply settings for"
-  default     = ["*.khaledez.net", "*.dev.khaledez.net"]
+  default     = ["khaledez.net", "www.khaledez.net", "*.dev.khaledez.net"]
 }
 
 variable "dns_zone_domain" {
