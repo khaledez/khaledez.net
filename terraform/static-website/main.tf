@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket = "net.khaledez.terraform.backend"
-    region = "eu-west-2"
+    region = "us-east-1"
   }
 }
 
@@ -18,6 +18,11 @@ provider "aws" {
 
 variable "domain_name" {
   description = "Domain name"
+}
+
+variable "cert_domain" {
+  description = "ACM domain name"
+  default     = "*.dev.khaledez.net"
 }
 
 variable "dns_zone_domain" {
@@ -95,8 +100,7 @@ resource "aws_cloudfront_distribution" "cf_website" {
     }
   }
 
-  aliases    = [var.domain_name]
-  depends_on = [aws_acm_certificate_validation.validate_cert]
+  aliases = [var.domain_name]
 
   default_cache_behavior {
     allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
@@ -130,10 +134,15 @@ resource "aws_cloudfront_distribution" "cf_website" {
   tags = local.common_tags
 
   viewer_certificate {
-    cloudfront_default_certificate = true
     ssl_support_method             = "sni-only"
-    acm_certificate_arn            = aws_acm_certificate.domain_cert.arn
+    acm_certificate_arn            = data.aws_acm_certificate.domain_cert.arn
   }
+}
+
+data "aws_acm_certificate" "domain_cert" {
+  provider = aws.virginia
+  domain   = var.cert_domain
+  statuses = ["ISSUED"]
 }
 
 data "aws_route53_zone" "primary" {
@@ -155,5 +164,5 @@ resource "aws_route53_record" "www" {
 }
 
 output "domain_name" {
-  value = aws_cloudfront_distribution.cf_website.domain_name
+  value = var.domain_name
 }

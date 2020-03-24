@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
+      cert_domain: "*.dev.khaledez.net"
       terraform_dir: "terraform/static-website"
       terraform_version: 0.12.13
     steps:
@@ -76,6 +77,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}
+          TF_VAR_cert_domain: ${{ env.cert_domain }}
 
       - name: Copy files to S3 with AWS CLI
         run: |
