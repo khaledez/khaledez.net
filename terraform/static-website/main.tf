@@ -159,7 +159,7 @@ data "aws_route53_zone" "primary" {
 }
 
 resource "aws_route53_record" "www" {
-  zone_id         = data.aws_route53_zone.primary.zone_id
+  zone_id = data.aws_route53_zone.primary.zone_id
 
   for_each        = local.aliases
   name            = each.value
