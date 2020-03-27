@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       domain_name: khaledez.net
+      aliases: '["www.khaledez.net"]'
       cert_domain: "khaledez.net"
       terraform_dir: "terraform/static-website"
       terraform_version: 0.12.13
@@ -79,6 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}
+          TF_VAR_domain_aliases: ${{ env.aliases }}
           TF_VAR_cache_ttl: 3600
           TF_VAR_environment: prod
 
