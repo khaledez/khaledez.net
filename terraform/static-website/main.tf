@@ -161,7 +161,7 @@ data "aws_route53_zone" "primary" {
 resource "aws_route53_record" "www" {
   zone_id = data.aws_route53_zone.primary.zone_id
 
-  for_each        = local.aliases
+  for_each        = toset(local.aliases)
   name            = each.value
   type            = "A"
   allow_overwrite = true
