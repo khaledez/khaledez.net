@@ -20,6 +20,12 @@ variable "domain_name" {
   description = "Domain name"
 }
 
+variable "domain_aliases" {
+  description = "list of alternative domain names for the same service"
+  type        = list(string)
+  default     = []
+}
+
 variable "cert_domain" {
   description = "ACM domain name"
   default     = "*.dev.khaledez.net"
@@ -50,6 +56,8 @@ locals {
     Environment = var.environment
     App         = var.app_name
   }
+
+  aliases = concat([var.domain_name], var.domain_aliases)
 }
 
 resource "aws_s3_bucket" "s3_website" {
@@ -100,7 +108,7 @@ resource "aws_cloudfront_distribution" "cf_website" {
     }
   }
 
-  aliases = [var.domain_name]
+  aliases = local.aliases
 
   default_cache_behavior {
     allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
@@ -152,7 +160,9 @@ data "aws_route53_zone" "primary" {
 
 resource "aws_route53_record" "www" {
   zone_id         = data.aws_route53_zone.primary.zone_id
-  name            = var.domain_name
+
+  for_each        = local.aliases
+  name            = each.value
   type            = "A"
   allow_overwrite = true
 
