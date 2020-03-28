@@ -13,7 +13,7 @@ jobs:
       aliases: '["www.khaledez.net"]'
       cert_domain: "khaledez.net"
       terraform_dir: "terraform/static-website"
-      terraform_version: 0.12.13
+      terraform_version: 0.12.24
     steps:
       - uses: actions/checkout@v1
         with:
