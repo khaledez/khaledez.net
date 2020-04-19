@@ -127,6 +127,7 @@ resource "aws_cloudfront_distribution" "cf_website" {
     min_ttl                = 0
     default_ttl            = var.cache_ttl
     max_ttl                = 86400
+    compress               = true
   }
 
   enabled             = true
