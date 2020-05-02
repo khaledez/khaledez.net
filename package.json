@@ -1,7 +1,7 @@
 {
-  "name": "gatsby-starter-blog",
+  "name": "khaledez-net-website",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
+  "description": "Khaled Ezzughayyar website developed using Gatsby",
   "version": "0.1.0",
   "author": "Khaled Ezzughayyar <ezzughayyar@gmail.com>",
   "bugs": {
