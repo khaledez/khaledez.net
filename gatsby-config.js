@@ -1,11 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Khaled Ezzughayyar`,
-    author: {
-      name: `Khaled Ezzughayyar`,
-      summary: `Human-being`,
-    },
-    description: `A starter blog demonstrating what Gatsby can do.`,
+    description: `Khaled Ezzughayyar`,
     siteUrl: `https://www.khaledez.net/`,
     social: {
       twitter: `khaledez`,
