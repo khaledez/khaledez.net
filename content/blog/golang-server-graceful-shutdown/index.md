@@ -16,7 +16,7 @@ Golang documentation uses channels to communicate between the goroutine which li
 
 In this post, I'm gonna use [context.Context](https://golang.org/pkg/context/#Context)
 
-```golang
+```go
 package main
 
 import (

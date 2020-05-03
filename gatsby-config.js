@@ -49,7 +49,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `/android-chrome-192x192.png`,
+        icon: `static/android-chrome-192x192.png`,
       },
     },
     `gatsby-plugin-react-helmet`,
