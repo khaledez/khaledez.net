@@ -55,10 +55,7 @@ jobs:
         run: terraform validate ${{ env.terraform_dir }}
 
       - name: Terraform Apply
-        run: |
-          pushd ${{ env.terraform_dir }}
-          terraform apply -auto-approve 
-          popd
+        run: terraform apply -auto-approve ${{ env.terraform_dir }}
         env:
           TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}

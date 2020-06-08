@@ -39,6 +39,7 @@ domain_name=local.dev.khaledez.net
         zip -q $tf_website_dir/target/router.zip $tf_website_dir/router.js
 
         terraform apply \
+            -auto-approve \
             -var "domain_name=$domain_name" \
             -var "environment=local" \
             $tf_website_dir
