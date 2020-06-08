@@ -27,37 +27,40 @@ domain_name=local.dev.khaledez.net
 {
     tf_website_dir="terraform/static-website"
     command_init () {
+        pushd $tf_website_dir
         terraform init \
             -backend-config="key=local/local.dev.khaledez.net" \
             -get-plugins=true \
-            -input=false \
-            $tf_website_dir
+            -input=false 
+        popd
     }
 
     command_sync () {
         pushd $tf_website_dir
         mkdir -p target
         zip -q target/router.zip router.js
-        popd
 
         terraform apply \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" \
-            $tf_website_dir
+            -var "environment=local" 
+        
+        popd
     }
 
     command_destroy () {
         pushd $tf_website_dir
         rm -rf target/
+        
         # manually untrack Lambda@Edge function, because it cannot be deleted !!!
         terraform state rm 'aws_lambda_function.router'
-        popd
+        
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" \
-            $tf_website_dir
+            -var "environment=local" 
+        
+        popd
     }
 
     command_deploy () {
