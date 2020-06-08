@@ -41,6 +41,7 @@ jobs:
           mkdir -p target
           zip target/router.zip router.js
           popd
+          ls terraform/static-website/target
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
