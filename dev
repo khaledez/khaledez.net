@@ -29,6 +29,7 @@ domain_name=local.dev.khaledez.net
     }
 
     command_sync () {
+        mkdir -p $tf_website_dir/target
         zip $tf_website_dir/target/router.zip $tf_website_dir/router.js
 
         terraform apply \
