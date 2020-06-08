@@ -13,21 +13,18 @@ jobs:
       aliases: '["www.khaledez.net"]'
       cert_domain: "khaledez.net"
       terraform_dir: "terraform/static-website"
-      terraform_version: 0.12.24
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
 
-      - name: Terraform Format
-        uses: hashicorp/terraform-github-actions@master
+      - uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "fmt"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          terraform_version: 0.12.26
+
+      - name: Terraform Format
+        run: terraform fmt -check ${{ env.terraform_dir }}
+
       - name: setup node
         uses: actions/setup-node@v1
         with:
@@ -41,6 +38,13 @@ jobs:
         env:
           CI: true
 
+      - name: create router lambda zipfile
+        run: |
+          pushd terraform/static-website
+          mkdir -p target
+          zip target/router.zip router.js
+          popd
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -49,35 +53,13 @@ jobs:
           aws-region: eu-west-2 # London
 
       - name: Terraform Init
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "init"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
-          args: '-backend-config="key=master/${{ env.domain_name }}"'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: terraform init -backend-config="key=master/${{ env.domain_name }}" ${{ env.terraform_dir }}
       - name: Terraform Validate
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "validate"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: terraform validate ${{ env.terraform_dir }}
 
       - name: Terraform Apply
-        id: "terraform_apply"
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "apply"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
+        run: terraform apply -auto-approve ${{ env.terraform_dir }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}
           TF_VAR_domain_aliases: ${{ env.aliases }}
