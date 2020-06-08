@@ -11,6 +11,7 @@ jobs:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
       cert_domain: "*.dev.khaledez.net"
       terraform_dir: "terraform/static-website"
+      terraform_backend_bucket: net.khaledez.terraform.backend
     steps:
       - uses: actions/checkout@v1
         with:
