@@ -42,6 +42,7 @@ jobs:
       - name: create router lambda zipfile
         run: |
           pushd terraform/static-website
+          mkdir -p target
           zip target/router.zip router.js
           popd
 
