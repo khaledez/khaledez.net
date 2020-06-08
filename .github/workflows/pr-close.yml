@@ -11,36 +11,29 @@ jobs:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
       cert_domain: "*.dev.khaledez.net"
       terraform_dir: "terraform/static-website"
-      terraform_version: 0.12.24
       terraform_backend_bucket: net.khaledez.terraform.backend
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+
+      - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2 # London
-      - name: Terraform Init
-        uses: hashicorp/terraform-github-actions@master
+      
+      - uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "init"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
-          args: '-backend-config="key=pr/${{ env.domain_name }}"'
+          terraform_version: 0.12.26
+      
+      - name: Terraform Init
+        run: terraform init -backend-config="key=pr/${{ env.domain_name }}" ${{ env.terraform_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Terraform destroy
-        id: "terraform_destroy"
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: ${{ env.terraform_version }}
-          tf_actions_subcommand: "destroy"
-          tf_actions_working_dir: "${{ env.terraform_dir }}"
-          tf_actions_comment: true
+        run: terraform destroy ${{ env.terraform_dir }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}

@@ -10,7 +10,7 @@ data aws_iam_policy_document "lambda_policy" {
 }
 
 resource "aws_iam_role" "lambda_edge_exec" {
-  name               = "lambda_edge_exec"
+  name               = "${var.domain_name}_lambda_edge_exec"
   assume_role_policy = data.aws_iam_policy_document.lambda_policy.json
   provider           = aws.virginia
 
@@ -19,7 +19,7 @@ resource "aws_iam_role" "lambda_edge_exec" {
 
 resource "aws_lambda_function" "router" {
   provider      = aws.virginia
-  function_name = "static-website-router"
+  function_name = "${var.domain_name}-static-website-router"
   publish       = true
   role          = aws_iam_role.lambda_edge_exec.arn
   runtime       = "nodejs12.x"

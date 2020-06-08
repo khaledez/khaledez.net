@@ -5,6 +5,14 @@ domain_name=local.dev.khaledez.net
 
 # common functions
 {
+    pushd () {
+        command pushd "$@" > /dev/null
+    }
+
+    popd () {
+        command popd "$@" > /dev/null
+    }
+    
     log() {
         printf '\033[32m->\033[m %s\n' "$*"
     }
@@ -40,11 +48,14 @@ domain_name=local.dev.khaledez.net
     }
 
     command_destroy () {
+        pushd $tf_website_dir
+        # manually untrack Lambda@Edge function, because it cannot be deleted !!!
+        terraform state rm 'aws_lambda_function.router'
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" \
-            $tf_website_dir
+            -var "environment=local" 
+        popd
     }
 
     command_deploy () {
