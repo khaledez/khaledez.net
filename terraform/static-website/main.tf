@@ -130,6 +130,32 @@ resource "aws_cloudfront_distribution" "cf_website" {
     compress               = true
   }
 
+  ordered_cache_behavior {
+    target_origin_id       = var.domain_name
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods         = ["GET", "HEAD"]
+    path_pattern           = "*"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl     = 0
+    default_ttl = var.cache_ttl
+    max_ttl     = 86400
+    compress    = true
+
+    lambda_function_association {
+      event_type = "origin-request"
+      lambda_arn = aws_lambda_function.router.qualified_arn
+    }
+  }
+
   enabled             = true
   is_ipv6_enabled     = true
   default_root_object = "index.html"

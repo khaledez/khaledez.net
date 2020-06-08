@@ -5,14 +5,6 @@ domain_name=local.dev.khaledez.net
 
 # common functions
 {
-    pushd () {
-        command pushd "$@" > /dev/null
-    }
-
-    popd () {
-        command popd "$@" > /dev/null
-    }
-
     log() {
         printf '\033[32m->\033[m %s\n' "$*"
     }
@@ -25,21 +17,33 @@ domain_name=local.dev.khaledez.net
 
 # sub commands
 {
+    tf_website_dir="terraform/static-website"
     command_setup () {
-        pushd "terraform/static-website"
         terraform init \
             -backend-config="key=local/local.dev.khaledez.net" \
             -get-plugins=true \
-            -reconfigure \
-            -input=false
-        terraform apply -var "domain_name=$domain_name" -auto-approve
-        popd
+            -input=false \
+            $tf_website_dir
+        
+        command_sync
+    }
+
+    command_sync () {
+        zip $tf_website_dir/target/router.zip $tf_website_dir/router.js
+
+        terraform apply \
+            -auto-approve \
+            -var "domain_name=$domain_name" \
+            -var "environment=local" \
+            $tf_website_dir
     }
 
     command_destroy () {
-        pushd "terraform/static-website"
-        terraform destroy
-        popd
+        terraform destroy \
+            -auto-approve \
+            -var "domain_name=$domain_name" \
+            -var "environment=local" \
+            $tf_website_dir
     }
 
     command_deploy () {
@@ -56,5 +60,5 @@ domain_name=local.dev.khaledez.net
     }
 }
 
-[ "$1" ] || die "Usage: ./dev [setup|destroy|deploy|build|clean]"
+[ "$1" ] || die "Usage: ./dev [setup|destroy|sync|deploy|build|clean]"
 command_$1
