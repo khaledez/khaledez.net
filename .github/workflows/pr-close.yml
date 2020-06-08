@@ -29,13 +29,10 @@ jobs:
       
       - name: Terraform Init
         run: terraform init -backend-config="key=pr/${{ env.domain_name }}" ${{ env.terraform_dir }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Terraform destroy
         run: terraform destroy ${{ env.terraform_dir }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}
 
