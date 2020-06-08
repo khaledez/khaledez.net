@@ -12,7 +12,7 @@ domain_name=local.dev.khaledez.net
     popd () {
         command popd "$@" > /dev/null
     }
-    
+
     log() {
         printf '\033[32m->\033[m %s\n' "$*"
     }
@@ -26,22 +26,19 @@ domain_name=local.dev.khaledez.net
 # sub commands
 {
     tf_website_dir="terraform/static-website"
-    command_setup () {
+    command_init () {
         terraform init \
             -backend-config="key=local/local.dev.khaledez.net" \
             -get-plugins=true \
             -input=false \
             $tf_website_dir
-        
-        command_sync
     }
 
     command_sync () {
         mkdir -p $tf_website_dir/target
-        zip $tf_website_dir/target/router.zip $tf_website_dir/router.js
+        zip -q $tf_website_dir/target/router.zip $tf_website_dir/router.js
 
         terraform apply \
-            -auto-approve \
             -var "domain_name=$domain_name" \
             -var "environment=local" \
             $tf_website_dir
@@ -49,13 +46,15 @@ domain_name=local.dev.khaledez.net
 
     command_destroy () {
         pushd $tf_website_dir
+        rm -rf target/
         # manually untrack Lambda@Edge function, because it cannot be deleted !!!
         terraform state rm 'aws_lambda_function.router'
+        popd
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" 
-        popd
+            -var "environment=local" \
+            $tf_website_dir
     }
 
     command_deploy () {
@@ -72,5 +71,5 @@ domain_name=local.dev.khaledez.net
     }
 }
 
-[ "$1" ] || die "Usage: ./dev [setup|destroy|sync|deploy|build|clean]"
+[ "$1" ] || die "Usage: ./dev [init|sync|destroy|deploy|build|clean]"
 command_$1
