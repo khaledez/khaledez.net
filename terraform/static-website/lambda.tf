@@ -25,7 +25,7 @@ resource "aws_lambda_function" "router" {
   runtime       = "nodejs12.x"
 
   filename = "${path.root}/target/router.zip"
-  handler  = "${path.root}/router.handler"
+  handler  = "router.handler"
 
   tags = local.common_tags
 }
