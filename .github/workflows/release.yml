@@ -33,8 +33,8 @@ jobs:
       - name: npm install, test
         run: |
           yarn install --frozen-lockfile
-          yarn build --if-present
           yarn test
+          yarn build
         env:
           CI: true
 
