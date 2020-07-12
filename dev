@@ -4,78 +4,72 @@
 domain_name=local.dev.khaledez.net
 
 # common functions
-{
-    pushd () {
-        command pushd "$@" > /dev/null
-    }
 
-    popd () {
-        command popd "$@" > /dev/null
-    }
+log() {
+    printf '\033[32m->\033[m %s\n' "$*"
+}
 
-    log() {
-        printf '\033[32m->\033[m %s\n' "$*"
-    }
-
-    die() {
-        printf '\033[31m->\033[m %s\n' "$*" >&2
-        exit 1
-    }
+die() {
+    printf '\033[31m->\033[m %s\n' "$*" >&2
+    exit 1
 }
 
 # sub commands
 {
     tf_website_dir="terraform/static-website"
-    command_init () {
-        pushd $tf_website_dir
+    command_init() {
+        oldpath=$(pwd)
+        cd $tf_website_dir || exit 1
         terraform init \
             -backend-config="key=local/local.dev.khaledez.net" \
             -get-plugins=true \
-            -input=false 
-        popd
+            -input=false
+        cd "$oldpath" || exit 1
     }
 
-    command_sync () {
-        pushd $tf_website_dir
+    command_sync() {
+        oldpath=$(pwd)
+        cd $tf_website_dir || exit 1
         mkdir -p target
         zip -q target/router.zip router.js
 
         terraform apply \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" 
-        
-        popd
+            -var "environment=local"
+
+        cd "$oldpath" || exit 1
     }
 
-    command_destroy () {
-        pushd $tf_website_dir
+    command_destroy() {
+        oldpath=$(pwd)
+        cd $tf_website_dir || exit 1
         rm -rf target/
-        
+
         # manually untrack Lambda@Edge function, because it cannot be deleted !!!
         terraform state rm 'aws_lambda_function.router'
-        
+
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local" 
-        
-        popd
+            -var "environment=local"
+
+        cd "$oldpath" || exit 1
     }
 
-    command_deploy () {
+    command_deploy() {
         aws s3 sync public/ s3://$domain_name
     }
 
-    command_build () {
+    command_build() {
         yarn && yarn build
     }
 
-    command_clean () {
+    command_clean() {
         yarn clean
         rm -rf node_modules/
     }
 }
 
 [ "$1" ] || die "Usage: ./dev [init|sync|destroy|deploy|build|clean]"
-command_$1
+"command_$1"
