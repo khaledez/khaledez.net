@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Link } from "gatsby"
 
 import { rhythm, scale } from "../utils/typography"
@@ -47,6 +47,21 @@ const Layout = ({ location, title, children }) => {
       </h3>
     )
   }
+
+  useEffect(() => {
+    const script = document.createElement('script');
+
+    script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+    script.async = true;
+    script.defer = true;
+    script.setAttribute('data-cf-beacon', '{"token": "37192888650a40c181a9a8d55c904f2c"}');
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    }
+  }, []);
   return (
     <div
       style={{
@@ -59,7 +74,7 @@ const Layout = ({ location, title, children }) => {
       <header>{header}</header>
       <main>{children}</main>
       <footer>
-        <span style={{fontFamily: `sans-serif`}}>kz@khaledez.net</span>
+        <span style={{ fontFamily: `sans-serif` }}>kz@khaledez.net</span>
       </footer>
     </div>
   )
