@@ -62,7 +62,7 @@ die() {
     }
 
     command_build() {
-        yarn && yarn build
+        exec hugo build
     }
 
     command_clean() {
@@ -71,5 +71,5 @@ die() {
     }
 }
 
-[ "$1" ] || die "Usage: ./dev [init|sync|destroy|deploy|build|clean]"
+[ "$1" ] || die "Usage: ./please [init|sync|destroy|deploy|build|clean]"
 "command_$1"
