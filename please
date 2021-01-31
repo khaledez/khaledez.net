@@ -62,12 +62,11 @@ die() {
     }
 
     command_build() {
-        exec hugo build
+        exec hugo -D
     }
 
     command_clean() {
-        yarn clean
-        rm -rf node_modules/
+        rm -rf public/ resources/
     }
 }
 

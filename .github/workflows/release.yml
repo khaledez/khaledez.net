@@ -20,23 +20,14 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.12.26
+          terraform_version: 0.14.5
 
       - name: Terraform Format
         run: terraform fmt -check ${{ env.terraform_dir }}
 
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-
-      - name: npm install, test
+      - name: build site
         run: |
-          yarn install --frozen-lockfile
-          yarn test
-          yarn build
-        env:
-          CI: true
+          hugo
 
       - name: create router lambda zipfile
         run: |
