@@ -25,9 +25,13 @@ jobs:
       - name: Terraform Format
         run: terraform fmt -check ${{ env.terraform_dir }}
 
+      - uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: "0.80.0"
+
       - name: build site
         run: |
-          hugo
+          hugo --minify
 
       - name: create router lambda zipfile
         run: |
