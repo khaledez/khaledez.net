@@ -28,7 +28,7 @@ jobs:
 
       - name: build site
         run: |
-          hugo --buildDrafts --baseURL ${{ env.domain_name }}
+          hugo --buildDrafts --baseURL https://${{ env.domain_name }}
 
       - name: create router lambda zipfile
         run: |
