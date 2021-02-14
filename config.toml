@@ -2,3 +2,5 @@ baseURL = "https://khaledez.net"
 languageCode = "en-CA"
 title = "Khaled Ezzughayyar"
 theme = "khmez"
+disableKinds = ["taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
