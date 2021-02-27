@@ -6,9 +6,9 @@ date: 2021-02-01T12:47:00Z
 
 ### Assalamu Alaikom, Hello,
 
-I am a Software Engineer based in Toronto, Canada. I'm originally from Al-Quds (Jerusalem) of the Holy Lands.
+I am a software engineer based in Toronto, Canada. I'm originally from Al-Quds (Jerusalem) of the Holy Lands.
 
-This is my personal technical Web space, where I implement what I learn in Web Development, Server Architecture and Infrastructure Engineering. And share what I learn with the Internet.
+This is my personal technical web space, I try to apply & share what I learn in Web Development, Server Architecture and Infrastructure Engineering.
 
 Find me on [LinkedIn](https://linkedin.com/in/khaledez), [Twitter](https://twitter.com/khaledez) and [GitHub](https://github.com/khaledez).
 
