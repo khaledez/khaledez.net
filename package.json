@@ -9,12 +9,7 @@
   },
   "dependencies": {
     "@astrojs/renderer-preact": "^0.2.2",
-    "astro": "^0.20.12",
-    "react-typography": "^0.16.19",
-    "typeface-merriweather": "0.0.72",
-    "typeface-montserrat": "0.0.75",
-    "typography": "^0.16.19",
-    "typography-theme-wordpress-2016": "^0.16.19"
+    "astro": "^0.20.12"
   },
   "devDependencies": {
     "prettier": "^2.4.1"
