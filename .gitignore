@@ -1,6 +1,6 @@
-public/
 resources/
 node_modules/
 .cache/
 .terraform/
 target/
+dist/

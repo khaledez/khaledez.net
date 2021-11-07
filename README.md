@@ -10,6 +10,6 @@ $ cd terraform/infrastructre && terraform apply
 
 # Development
 ```bash
-$ yarn
-$ yarn develop
+$ npm install
+$ npm run dev
 ```

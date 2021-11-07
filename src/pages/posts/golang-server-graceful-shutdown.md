@@ -1,7 +1,9 @@
 ---
 title: Golang Server Graceful Shutdown
 date: "2020-05-03T04:04:46.318Z"
+publishDate: 'Sunday, May 03 2020'
 description: Using context to gracefully shutdown an HTTP Server in Golang
+layout: '../../layouts/BlogPost.astro'
 ---
 
 You always need to shutdown your server for maintenance, 

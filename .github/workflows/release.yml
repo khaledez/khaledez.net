@@ -2,12 +2,12 @@ name: release website
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   release:
     name: build and publish
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       domain_name: khaledez.net
       aliases: '["www.khaledez.net"]'
@@ -28,13 +28,12 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
 
       - name: npm install, test
         run: |
-          yarn install --frozen-lockfile
-          yarn test
-          yarn build
+          npm install --production
+          npm run build
         env:
           CI: true
 
@@ -68,4 +67,4 @@ jobs:
 
       - name: Copy files to S3 with AWS CLI
         run: |
-          aws s3 sync public/ s3://${{ env.domain_name }}
+          aws s3 sync dist/ s3://${{ env.domain_name }}

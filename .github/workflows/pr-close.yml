@@ -6,7 +6,7 @@ on:
 jobs:
   delete:
     name: delete created website
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
       cert_domain: "*.dev.khaledez.net"

@@ -22,7 +22,6 @@ die() {
         cd $tf_website_dir || exit 1
         terraform init \
             -backend-config="key=local/local.dev.khaledez.net" \
-            -get-plugins=true \
             -input=false
         cd "$oldpath" || exit 1
     }
@@ -62,14 +61,13 @@ die() {
     }
 
     command_build() {
-        yarn && yarn build
+        exec hugo -D
     }
 
     command_clean() {
-        yarn clean
-        rm -rf node_modules/
+        rm -rf public/ resources/
     }
 }
 
-[ "$1" ] || die "Usage: ./dev [init|sync|destroy|deploy|build|clean]"
+[ "$1" ] || die "Usage: ./please [init|sync|destroy|deploy|build|clean]"
 "command_$1"
