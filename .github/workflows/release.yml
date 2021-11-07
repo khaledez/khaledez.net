@@ -67,4 +67,5 @@ jobs:
 
       - name: Copy files to S3 with AWS CLI
         run: |
+          aws s3 rm s3://${{ env.domain_name }} --recursive
           aws s3 sync dist/ s3://${{ env.domain_name }}
