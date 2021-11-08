@@ -1,20 +1,20 @@
-"use strict"
+"use strict";
 exports.handler = (event, context, callback) => {
   // Extract the request from the CloudFront event that is sent to Lambda@Edge
-  let request = event.Records[0].cf.request
-
-  // Extract the URI from the request
-  let olduri = request.uri
-
-  // Match any '/' that occurs at the end of a URI. Replace it with a default index
-  var newuri =
-    olduri.slice(-1) == "/"
-      ? olduri.replace(/\/$/, "/index.html")
-      : olduri + "/index.html"
+  let request = event.Records[0].cf.request;
 
   // Replace the received URI with the URI that includes the index page
-  request.uri = newuri
+  request.uri = handleUri(request.uri);
 
   // Return to CloudFront
-  return callback(null, request)
+  return callback(null, request);
+};
+
+function handleUri(oldUri) {
+  if (oldUri.slice(-10) !== 'index.html') {
+    return oldUri.slice(-1) == "/"
+      ? oldUri.replace(/\/$/, "/index.html")
+      : oldUri + "/index.html";
+  }
+  return oldUri;
 }

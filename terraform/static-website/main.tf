@@ -158,7 +158,7 @@ resource "aws_cloudfront_distribution" "cf_website" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = "/"
+  default_root_object = "index.html"
 
   restrictions {
     geo_restriction {
