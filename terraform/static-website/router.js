@@ -10,11 +10,13 @@ exports.handler = (event, context, callback) => {
   return callback(null, request);
 };
 
+const URI_REGEX = /\.[a-zA-Z0-9]{2,10}$/gm;
+
 function handleUri(oldUri) {
-  if (oldUri.slice(-10) !== 'index.html') {
-    return oldUri.slice(-1) == "/"
-      ? oldUri.replace(/\/$/, "/index.html")
-      : oldUri + "/index.html";
+  if (oldUri.match(URI_REGEX)) {
+    return oldUri;
   }
-  return oldUri;
+  return oldUri.slice(-1) == "/"
+    ? oldUri.replace(/\/$/, "/index.html")
+    : oldUri + "/index.html";
 }
