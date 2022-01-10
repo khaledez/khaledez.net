@@ -10,7 +10,7 @@ data "aws_iam_policy_document" "terraform_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::427368570714:user/github",
-        "${data.aws_caller_identity.current.arn}"
+        data.aws_caller_identity.current.arn
       ]
     }
   }
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "terraform_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::427368570714:user/github",
-        "${data.aws_caller_identity.current.arn}"
+        data.aws_caller_identity.current.arn
       ]
     }
   }
