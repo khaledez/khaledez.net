@@ -4,3 +4,5 @@ node_modules/
 .terraform/
 target/
 dist/
+terraform.tfstate
+terraform.tfstate.backup

@@ -5,5 +5,12 @@ terraform {
       version = "~> 3.71.0"
     }
   }
-  required_version = ">= 0.13"
+  required_version = ">= 1.1"
+
+	cloud {
+		organization = "khaledez"
+    workspaces {
+      tags = ["appName:khaledeznetinfra"]
+    }
+	}
 }
