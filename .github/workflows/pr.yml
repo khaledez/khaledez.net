@@ -20,7 +20,9 @@ jobs:
           terraform_version: 1.1.x
 
       - name: Terraform Format
-        run: terraform fmt -check ${{ env.terraform_dir }}
+        run: |
+          terraform fmt -check ${{ env.terraform_dir }}
+          terraform fmt -check terraform/infrastructure
 
       - name: setup node
         uses: actions/setup-node@v1
