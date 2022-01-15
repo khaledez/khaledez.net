@@ -10,8 +10,6 @@ jobs:
     env:
       domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
       cert_domain: "*.dev.khaledez.net"
-      terraform_dir: "terraform/static-website"
-      terraform_backend_bucket: net.khaledez.terraform.backend
     steps:
       - uses: actions/checkout@v1
         with:
@@ -25,22 +23,16 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.12.26
+          terraform_version: 1.1.x
 
-      - name: Terraform destroy resources
+      - name: Setup configuration
         run: |
-          pushd ${{ env.terraform_dir }}
-          terraform init -backend-config="key=pr/${{ env.domain_name }}"
-
-          # manually untrack Lambda@Edge function, because it cannot be deleted !!!
-          terraform state rm 'aws_lambda_function.router'
-          terraform destroy -auto-approve 
-
-          popd
+          echo 'env_name=pr' > please.env
+          echo 'domain_name=${{ env.domain_name }}' >> please.env
+      
+      - name: destroy resources
+        run: |
+          sh ./please destroy
         env:
-          TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}
 
-      - name: Delete Terraform state
-        run: |
-          aws s3 rm s3://${{ env.terraform_backend_bucket }}/pr/${{ env.domain_name }}

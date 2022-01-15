@@ -1,31 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket = "net.khaledez.terraform.backend"
-    region = "us-east-1"
-  }
-}
-
-provider "aws" {
-  region  = "eu-west-2"
-  version = "~> 2.53"
-}
-
-provider "aws" {
-  alias   = "virginia"
-  region  = "us-east-1"
-  version = "~> 2.53"
-}
-
-
-locals {
-  common_tags = {
-    Environment = var.environment
-    App         = var.app_name
-  }
-
-  aliases = concat([var.domain_name], var.domain_aliases)
-}
-
 resource "aws_s3_bucket" "s3_website" {
   bucket        = var.domain_name
   force_destroy = true
@@ -64,6 +36,14 @@ data "aws_iam_policy_document" "s3_policy" {
   }
 }
 
+resource "aws_cloudfront_function" "cf_router" {
+  name    = join("-", [replace(var.domain_name, ".", "-"), "handler"])
+  runtime = "cloudfront-js-1.0"
+  comment = "router function to handle URLs"
+  publish = true
+  code    = file("${path.module}/router.js")
+}
+
 resource "aws_cloudfront_distribution" "cf_website" {
   origin {
     domain_name = aws_s3_bucket.s3_website.bucket_regional_domain_name
@@ -89,6 +69,11 @@ resource "aws_cloudfront_distribution" "cf_website" {
       }
     }
 
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.cf_router.arn
+    }
+
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = var.cache_ttl
@@ -96,30 +81,9 @@ resource "aws_cloudfront_distribution" "cf_website" {
     compress               = true
   }
 
-  ordered_cache_behavior {
-    target_origin_id       = var.domain_name
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods        = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
-    cached_methods         = ["GET", "HEAD"]
-    path_pattern           = "*"
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-
-    min_ttl     = 0
-    default_ttl = var.cache_ttl
-    max_ttl     = 86400
-    compress    = true
-  }
-
   enabled             = true
   is_ipv6_enabled     = true
-  default_root_object = ""
+  default_root_object = "index.html"
 
   restrictions {
     geo_restriction {
@@ -159,8 +123,4 @@ resource "aws_route53_record" "www" {
     zone_id                = aws_cloudfront_distribution.cf_website.hosted_zone_id
     evaluate_target_health = true
   }
-}
-
-output "domain_name" {
-  value = var.domain_name
 }

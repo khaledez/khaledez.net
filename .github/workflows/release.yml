@@ -20,29 +20,23 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 0.12.26
+          terraform_version: 1.1.x
 
-      - name: Terraform Format
-        run: terraform fmt -check ${{ env.terraform_dir }}
+      - name: Terraform format check
+        run: |
+          terraform fmt -check ${{ env.terraform_dir }}
+          terraform fmt -check terraform/infrastructure
 
       - name: setup node
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
 
-      - name: npm install, test
+      - name: npm install
         run: |
-          npm install --production
-          npm run build
+          npm install
         env:
           CI: true
-
-      - name: create router lambda zipfile
-        run: |
-          pushd terraform/static-website
-          mkdir -p target
-          zip target/router.zip router.js
-          popd
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -50,22 +44,30 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2 # London
+      
+      - name: Setup configuration
+        run: |
+          echo 'env_name=prod' > please.env
+          echo 'domain_name=${{ env.domain_name }}' >> please.env
 
-      - name: Terraform Init
-        run: terraform init -backend-config="key=master/${{ env.domain_name }}" ${{ env.terraform_dir }}
+      - name: Terraform init
+        run: sh ./please init
+
       - name: Terraform Validate
-        run: terraform validate ${{ env.terraform_dir }}
+        run: |
+          pushd ${{ env.terraform_dir }}
+          terraform validate 
+          popd
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve ${{ env.terraform_dir }}
+      - name: Terraform apply
+        run: sh ./please sync
         env:
-          TF_VAR_domain_name: ${{ env.domain_name }}
           TF_VAR_cert_domain: ${{ env.cert_domain }}
           TF_VAR_domain_aliases: ${{ env.aliases }}
           TF_VAR_cache_ttl: 3600
-          TF_VAR_environment: prod
 
-      - name: Copy files to S3 with AWS CLI
-        run: |
-          aws s3 rm s3://${{ env.domain_name }} --recursive
-          aws s3 sync dist/ s3://${{ env.domain_name }}
+      - name: Build website
+        run: sh ./please build
+      
+      - name: Deploy website
+        run: sh ./please deploy

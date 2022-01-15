@@ -7,10 +7,10 @@ terraform {
   }
   required_version = ">= 1.1.0"
 
-	cloud {
-		organization = "khaledez"
+  cloud {
+    organization = "khaledez"
     workspaces {
-			name = "khaledez-net-infra"
+      name = "khaledez-net-infra"
     }
   }
 }
