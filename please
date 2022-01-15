@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 # load config
 
@@ -41,7 +41,7 @@ die() {
         terraform apply \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=$env_name"
+            -var "environment=$env_name" || exit 1
 
         cd "$oldpath" || exit 1
     }
@@ -53,7 +53,7 @@ die() {
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=$env_name" 
+            -var "environment=$env_name" || exit 1
 
         cd "$oldpath" || exit 1
 
@@ -69,10 +69,14 @@ die() {
         exec npm run build
     }
 
+    command_run() {
+        exec npm run dev
+    }
+
     command_clean() {
         rm -rf dist/
     }
 }
 
-[ "$1" ] || die "Usage: ./please [init|sync|destroy|deploy|build|clean]"
+[ "$1" ] || die "Usage: ./please [init|sync|destroy|deploy|build|run|clean]"
 "command_$1"
