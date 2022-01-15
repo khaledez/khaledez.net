@@ -27,7 +27,7 @@ jobs:
 
       - name: Setup configuration
         run: |
-          echo 'env_name=pr' > please.env
+          echo 'env_name=dev' > please.env
           echo 'domain_name=${{ env.domain_name }}' >> please.env
       
       - name: Terraform init
