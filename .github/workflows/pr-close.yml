@@ -30,6 +30,9 @@ jobs:
           echo 'env_name=pr' > please.env
           echo 'domain_name=${{ env.domain_name }}' >> please.env
       
+      - name: Terraform init
+        run: sh ./please init
+      
       - name: destroy resources
         run: |
           sh ./please destroy
