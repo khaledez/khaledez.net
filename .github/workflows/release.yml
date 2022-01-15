@@ -54,7 +54,10 @@ jobs:
         run: sh ./please init
 
       - name: Terraform Validate
-        run: terraform validate ${{ env.terraform_dir }}
+        run: |
+          pushd ${{ env.terraform_dir }}
+          terraform validate 
+          popd
 
       - name: Terraform apply
         run: sh ./please sync
