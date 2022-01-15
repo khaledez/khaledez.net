@@ -12,10 +12,10 @@ data "aws_route53_zone" "primary" {
 
 resource "aws_route53_record" "cert_validation" {
   for_each = local.domains_product
-  name     = element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options) ,each.value[1]).resource_record_name
-  type     = element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options) ,each.value[1]).resource_record_type
+  name     = element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options), each.value[1]).resource_record_name
+  type     = element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options), each.value[1]).resource_record_type
   zone_id  = data.aws_route53_zone.primary.id
-  records  = [element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options) ,each.value[1]).resource_record_value]
+  records  = [element(tolist(aws_acm_certificate.domain_cert[each.value[0]].domain_validation_options), each.value[1]).resource_record_value]
   ttl      = 60
 }
 

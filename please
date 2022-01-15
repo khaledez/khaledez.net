@@ -1,7 +1,14 @@
 #!/bin/sh
 
-# config
+# load config
+
+## Default config
+backend_s3=net.khaledez.terraform.backend
+env_name=local
 domain_name=local.dev.khaledez.net
+
+# shellcheck source=/dev/null
+. ./please.env
 
 # common functions
 
@@ -21,7 +28,8 @@ die() {
         oldpath=$(pwd)
         cd $tf_website_dir || exit 1
         terraform init \
-            -backend-config="key=local/local.dev.khaledez.net" \
+            -backend-config="key=$env_name/$domain_name" \
+            -migrate-state \
             -input=false
         cd "$oldpath" || exit 1
     }
@@ -29,13 +37,11 @@ die() {
     command_sync() {
         oldpath=$(pwd)
         cd $tf_website_dir || exit 1
-        mkdir -p target
-        zip -q target/router.zip router.js
 
         terraform apply \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local"
+            -var "environment=$env_name"
 
         cd "$oldpath" || exit 1
     }
@@ -43,29 +49,28 @@ die() {
     command_destroy() {
         oldpath=$(pwd)
         cd $tf_website_dir || exit 1
-        rm -rf target/
-
-        # manually untrack Lambda@Edge function, because it cannot be deleted !!!
-        terraform state rm 'aws_lambda_function.router'
 
         terraform destroy \
             -auto-approve \
             -var "domain_name=$domain_name" \
-            -var "environment=local"
+            -var "environment=$env_name" 
 
         cd "$oldpath" || exit 1
+
+        aws s3 rm "s3://$backend_s3/$env_name/$domain_name"
     }
 
     command_deploy() {
-        aws s3 sync public/ s3://$domain_name
+        aws s3 rm "s3://$domain_name" --recursive
+        aws s3 sync dist/ "s3://$domain_name" 
     }
 
     command_build() {
-        exec hugo -D
+        exec npm run build
     }
 
     command_clean() {
-        rm -rf public/ resources/
+        rm -rf dist/
     }
 }
 
