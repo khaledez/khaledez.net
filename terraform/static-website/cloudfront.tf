@@ -45,6 +45,8 @@ resource "aws_cloudfront_distribution" "cf_website" {
     default_ttl            = var.cache_ttl
     max_ttl                = 86400
     compress               = true
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.headers.id
   }
 
   enabled             = true
@@ -62,5 +64,36 @@ resource "aws_cloudfront_distribution" "cf_website" {
   viewer_certificate {
     ssl_support_method  = "sni-only"
     acm_certificate_arn = data.aws_acm_certificate.domain_cert.arn
+  }
+}
+
+resource "aws_cloudfront_response_headers_policy" "headers" {
+  name = join("-", [replace(var.domain_name, ".", "-"), var.environment, "security-custom-headers"])
+
+  security_headers_config {
+    content_security_policy {
+      override                = true
+      content_security_policy = "default-src *  data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * data: blob: 'unsafe-inline'; font-src * data: blob: 'unsafe-inline'"
+    }
+    content_type_options {
+      override = true
+    }
+    referrer_policy {
+      referrer_policy = "strict-origin-when-cross-origin"
+      override        = true
+    }
+    strict_transport_security {
+      access_control_max_age_sec = 31536000
+      override                   = true
+    }
+    frame_options {
+      frame_option = "SAMEORIGIN"
+      override     = true
+    }
+    xss_protection {
+      mode_block = true
+      override   = true
+      protection = true
+    }
   }
 }
