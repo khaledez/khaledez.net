@@ -2,23 +2,16 @@ data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "terraform_policy" {
   statement {
-    effect    = "Allow"
-    actions   = ["s3:ListBucket"]
-    resources = ["arn:aws:s3:::${var.bucket_name}"]
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::427368570714:user/github",
-        data.aws_caller_identity.current.arn
-      ]
-    }
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["s3:GetObject", "s3:PutObject"]
-    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+      "s3:GetObject",
+      "s3:PutObject"
+    ]
+    resources = [
+      "arn:aws:s3:::${var.bucket_name}",
+      "arn:aws:s3:::${var.bucket_name}/*"
+    ]
 
     principals {
       type = "AWS"
