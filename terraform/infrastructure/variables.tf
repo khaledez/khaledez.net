@@ -7,8 +7,8 @@ variable "domain_aliases" {
   description = "Aliases for domains to be added to the certificate as SAN"
   type        = map(set(string))
   default = {
-    "khaledez.net" : ["www.khaledez.net"],
-    "*.dev.khaledez.net" : []
+    "khaledez.net"       = ["www.khaledez.net"],
+    "*.dev.khaledez.net" = []
   }
 }
 
