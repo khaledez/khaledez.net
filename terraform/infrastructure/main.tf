@@ -10,5 +10,5 @@ module "acm" {
   tags            = local.common_tags
   domains         = var.domains
   domain_aliases  = var.domain_aliases
-  dns_zone_domain = var.dns_zone_domain
+  route53_zone_id = data.aws_route53_zone.primary.id
 }

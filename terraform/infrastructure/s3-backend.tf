@@ -1,6 +1,6 @@
 data "aws_caller_identity" "current" {}
 
-data "aws_iam_policy_document" "terraform_policy" {
+data "aws_iam_policy_document" "backend" {
   statement {
     effect = "Allow"
     actions = [
@@ -25,15 +25,15 @@ data "aws_iam_policy_document" "terraform_policy" {
 
 resource "aws_s3_bucket" "backend" {
   bucket = var.bucket_name
-  policy = data.aws_iam_policy_document.terraform_policy.json
-
-  versioning {
-    enabled = true
-  }
 
   tags = {
     Description = "Backend for terraform state"
     Environment = "PROD"
     App         = "net.khaledez.terraform"
   }
+}
+
+resource "aws_s3_bucket_policy" "backend" {
+  bucket = aws_s3_bucket.backend.id
+  policy = data.aws_iam_policy_document.backend.json
 }
