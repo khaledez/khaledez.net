@@ -2,16 +2,17 @@
   "name": "khaledez-net-website",
   "private": true,
   "description": "Khaled Ezzughayyar website developed using Astro",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "author": "Khaled Ezzughayyar <ezzughayyar@gmail.com>",
   "bugs": {
     "url": "https://github.com/khaledez/khaledez.net/issues"
   },
   "dependencies": {
-    "astro": "^0.22.13"
+    "astro": "^1.0.2"
   },
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "@astrojs/preact": "^1.0.2",
+    "prettier": "^2.7.1"
   },
   "homepage": "https://github.com/khaledez/khaledez.net#readme",
   "license": "MIT",
@@ -23,7 +24,6 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "build": "astro build"
   }
 }
