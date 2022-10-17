@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "s3_policy" {
 
     principals {
       type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
+      identifiers = [module.tf_next.api_endpoint_access_policy_arn]
     }
   }
 

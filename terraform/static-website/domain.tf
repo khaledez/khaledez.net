@@ -18,8 +18,8 @@ resource "aws_route53_record" "www" {
   allow_overwrite = true
 
   alias {
-    name                   = aws_cloudfront_distribution.cf_website.domain_name
-    zone_id                = aws_cloudfront_distribution.cf_website.hosted_zone_id
+    name                   = module.tf_next.cloudfront_domain_name
+    zone_id                = module.tf_next.cloudfront_hosted_zone_id
     evaluate_target_health = true
   }
 }
