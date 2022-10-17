@@ -29,7 +29,7 @@ die() {
         cd $tf_website_dir || exit 1
         terraform init \
             -backend-config="key=$env_name/$domain_name" \
-            -migrate-state
+            -migrate-state -upgrade
         cd "$oldpath" || exit 1
     }
 
