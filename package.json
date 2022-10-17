@@ -3,7 +3,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "tf-build": "tf-next build",
+    "tf-deploy": "tf-next deploy"
   },
   "dependencies": {
     "next": "latest",

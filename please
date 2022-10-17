@@ -60,12 +60,19 @@ die() {
     }
 
     command_deploy() {
-        aws s3 rm "s3://$domain_name" --recursive
-        aws s3 sync dist/ "s3://$domain_name" 
+        oldpath=$(pwd)
+        cd $tf_website_dir || exit 1
+
+        apiEndpoint=$(terraform output -raw api_endpoint) || exit 1
+
+        cd "$oldpath" || exit 1
+        exec npm run tf-deploy -- --endpoint "$apiEndpoint"
+        # aws s3 rm "s3://$domain_name" --recursive
+        # aws s3 sync dist/ "s3://$domain_name" 
     }
 
     command_build() {
-        exec npm run build
+        exec npm run tf-build
     }
 
     command_run() {
