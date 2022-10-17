@@ -14,7 +14,7 @@ module "tf_next" {
   enable_multiple_deployments = false
 
   providers = {
-    aws.region = "us-east-1"
+    aws.global_region = aws.virginia
   }
 }
 
