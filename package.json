@@ -1,29 +1,16 @@
 {
-  "name": "khaledez-net-website",
   "private": true,
-  "description": "Khaled Ezzughayyar website developed using Astro",
-  "version": "0.4.0",
-  "author": "Khaled Ezzughayyar <ezzughayyar@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/khaledez/khaledez.net/issues"
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "astro": "^1.0.2"
+    "next": "latest",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
-    "@astrojs/preact": "^1.0.2",
-    "prettier": "^2.7.1"
-  },
-  "homepage": "https://github.com/khaledez/khaledez.net#readme",
-  "license": "MIT",
-  "main": "n/a",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/khaledez/khaledez.net.git"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build"
+    "tf-next": "^1.0.0-canary.5"
   }
 }
