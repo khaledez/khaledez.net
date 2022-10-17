@@ -11,7 +11,7 @@ module "tf_next" {
 
   deployment_name = "atomic-deployments"
 
-  enable_multiple_deployments      = false
+  enable_multiple_deployments = false
 
   providers = {
     aws.global_region = "us-east-1"
