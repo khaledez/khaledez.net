@@ -67,7 +67,7 @@ die() {
 
         cd "$oldpath" || exit 1
         echo "$apiEndpoint"
-        exec npm run tf-deploy -- --endpoint $apiEndpoint
+        exec npm run tf-deploy -- --endpoint https://v1rjcjtq07.execute-api.eu-west-2.amazonaws.com
         # aws s3 rm "s3://$domain_name" --recursive
         # aws s3 sync dist/ "s3://$domain_name" 
     }
