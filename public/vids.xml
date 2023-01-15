@@ -1,0 +1,6 @@
+<rss version="2.0">
+	<channel>
+		<title>Door Cam</title>
+		<link>rtsp://admin:admin123@192.168.1.200/cam/realmonitor?channel=1&subtype=1</link>
+	</channel>
+</rss>
