@@ -8,11 +8,11 @@
     "url": "https://github.com/khaledez/khaledez.net/issues"
   },
   "dependencies": {
-    "astro": "^1.0.2"
+    "astro": "^1.9.2"
   },
   "devDependencies": {
-    "@astrojs/preact": "^1.0.2",
-    "prettier": "^2.7.1"
+    "@astrojs/preact": "^1.2.0",
+    "prettier": "^2.8.3"
   },
   "homepage": "https://github.com/khaledez/khaledez.net#readme",
   "license": "MIT",
