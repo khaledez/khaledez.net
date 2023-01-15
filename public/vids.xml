@@ -1,6 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 	<channel>
-		<title>Door Cam</title>
-		<link>rtsp://admin:admin123@192.168.1.200/cam/realmonitor?channel=1&amp;subtype=1</link>
+		<title>Home Vids</title>
+		<description>Home Videos</description>
+		<link>https://khaledez.net/vids.xml</link>
+		<ttl>1800</ttl>
+
+		<item>
+			<title>Door Cam</title>
+			<description>Door Cam</description>
+			<link>rtsp://admin:admin123@192.168.1.200/cam/realmonitor?channel=1&amp;subtype=1</link>
+		</item>
+
 	</channel>
 </rss>
