@@ -65,6 +65,12 @@ resource "aws_cloudfront_distribution" "cf_website" {
     ssl_support_method  = "sni-only"
     acm_certificate_arn = data.aws_acm_certificate.domain_cert.arn
   }
+
+  logging_config {
+    bucket          = aws_s3_bucket.cf_logs.bucket_domain_name
+    include_cookies = true
+    prefix          = "${var.environment}-${var.domain_name}"
+  }
 }
 
 resource "aws_cloudfront_response_headers_policy" "headers" {
