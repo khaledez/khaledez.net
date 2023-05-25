@@ -6,3 +6,4 @@ target/
 dist/
 terraform.tfstate
 terraform.tfstate.backup
+.env

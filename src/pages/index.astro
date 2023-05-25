@@ -1,8 +1,7 @@
 ---
 // Component Imports
-import BaseHead from '../components/BaseHead.astro';
-import BlogHeader from '../components/BlogHeader.astro';
-import BlogPostPreview from '../components/BlogPostPreview.astro';
+import BaseHead from "../components/BaseHead.astro";
+import BlogHeader from "../components/BlogHeader.astro";
 
 interface MarkdownFrontmatter {
   publishDate: number;
@@ -12,17 +11,22 @@ interface MarkdownFrontmatter {
 // You can write any JavaScript/TypeScript that you'd like here.
 // It will run during the build, but never in the browser.
 // All variables are available to use in the HTML template below.
-let title = 'Khaled Ezzughayyar';
-let permalink = 'https://khaledez.net';
+let title = "Khaled Ezzughayyar";
+let permalink = "https://khaledez.net";
 
 // Data Fetching: List all Markdown posts in the repo.
 
-let allPosts = await Astro.glob<MarkdownFrontmatter>('./posts/*.md');
-allPosts = allPosts.sort((a, b) => new Date(b.frontmatter.publishDate).valueOf() - new Date(a.frontmatter.publishDate).valueOf());
+let allPosts = await Astro.glob<MarkdownFrontmatter>("./posts/*.md");
+allPosts = allPosts.sort(
+  (a, b) =>
+    new Date(b.frontmatter.publishDate).valueOf() -
+    new Date(a.frontmatter.publishDate).valueOf()
+);
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
+
 <html lang="en">
   <head>
     <BaseHead title={title} description={title} permalink={permalink} />
@@ -78,15 +82,27 @@ allPosts = allPosts.sort((a, b) => new Date(b.frontmatter.publishDate).valueOf()
       <main class="content">
         <section class="intro">
           <h1 class="latest">Assalamu Alaikom, Hello ...</h1>
-          <p>I am a software engineer based in the Holy Lands (Al-Quds/Jerusalem Suburbs).</p>
-          <p>This is my personal technical web space, 
-          I try to apply & share what I learn in Web Development and 
-          Backend and Infrastructure Engineering.</p>
-        </section>
-        <section aria-label="Blog post list">
-          {allPosts.map(p => <BlogPostPreview post={p} />)}
+          <p>
+            I am a software engineer based in the Holy Lands (Al-Quds/Jerusalem
+            Suburbs).
+          </p>
+          <p>
+            This is my personal technical web space, I try to apply & share what
+            I learn in Web Development and Backend and Infrastructure
+            Engineering.
+          </p>
         </section>
       </main>
     </div>
+    <script>
+      import * as Sentry from "@sentry/browser";
+
+      Sentry.init({
+        dsn: import.meta.env.PUBLIC_SENTRY_DSN,
+        integrations: [new Sentry.BrowserTracing()],
+        // Performance Monitoring
+        tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+      });
+    </script>
   </body>
 </html>
