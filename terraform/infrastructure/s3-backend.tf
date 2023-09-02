@@ -1,5 +1,3 @@
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "backend" {
   statement {
     effect = "Allow"
@@ -16,8 +14,7 @@ data "aws_iam_policy_document" "backend" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::427368570714:user/github",
-        data.aws_caller_identity.current.arn
+        "arn:aws:iam::427368570714:root"
       ]
     }
   }
@@ -26,11 +23,9 @@ data "aws_iam_policy_document" "backend" {
 resource "aws_s3_bucket" "backend" {
   bucket = var.bucket_name
 
-  tags = {
+  tags = merge(local.common_tags, {
     Description = "Backend for terraform state"
-    Environment = "PROD"
-    App         = "net.khaledez.terraform"
-  }
+  })
 }
 
 resource "aws_s3_bucket_policy" "backend" {
