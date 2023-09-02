@@ -11,4 +11,5 @@ module "acm" {
   domains         = var.domains
   domain_aliases  = var.domain_aliases
   route53_zone_id = data.aws_route53_zone.primary.id
+  version         = "2.0.0"
 }
