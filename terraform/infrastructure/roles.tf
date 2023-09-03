@@ -40,26 +40,35 @@ resource "aws_iam_role" "github-actions" {
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
   ]
 
-  inline_policy {
-    name = "manage-domain"
-    policy = jsonencode({
-      version = "2012-10-17"
-      effect  = "Allow"
-      statement = {
-        action = [
-          "route53:GetHostedZone",
-          "route53:ListHostedZones",
-          "route53:ChangeResourceRecordSets",
-          "route53:ListResourceRecordSets",
-          "route53:GetHostedZoneCount",
-          "route53:ListHostedZonesByName"
-        ]
-      }
-      resource = [data.aws_route53_zone.primary.arn]
-    })
-  }
-
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+resource "aws_iam_policy_attachment" "manage_domain" {
+  name       = "${var.app_name}-manage-domain"
+  roles      = [aws_iam_role.github-actions.name]
+  policy_arn = aws_iam_policy.manage_domain.arn
+}
+
+resource "aws_iam_policy" "manage_domain" {
+  name   = "${var.app_name}-manage-domain"
+  path   = "/"
+  policy = data.aws_iam_policy_document.manage_domain.json
+  tags   = local.common_tags
+}
+
+data "aws_iam_policy_document" "manage_domain" {
+  statement {
+    sid = "ManageRoute53Domain"
+    actions = [
+      "route53:GetHostedZone",
+      "route53:ListHostedZones",
+      "route53:ChangeResourceRecordSets",
+      "route53:ListResourceRecordSets",
+      "route53:GetHostedZoneCount",
+      "route53:ListHostedZonesByName"
+    ]
+    resources = [data.aws_route53_zone.primary.arn]
   }
 }
