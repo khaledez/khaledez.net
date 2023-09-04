@@ -54,6 +54,9 @@ resource "aws_s3_bucket_acl" "cf_logs" {
       }
       permission = "FULL_CONTROL"
     }
+    owner {
+      id = "427368570714"
+    }
   }
 }
 
