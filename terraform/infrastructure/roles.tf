@@ -71,6 +71,22 @@ data "aws_iam_policy_document" "manage_domain" {
     ]
     resources = [data.aws_route53_zone.primary.arn]
   }
+}
+
+resource "aws_iam_policy_attachment" "list_route53" {
+  name       = "${var.app_name}-list-route53"
+  roles      = [aws_iam_role.github-actions.name]
+  policy_arn = aws_iam_policy.list_route53.arn
+}
+
+resource "aws_iam_policy" "list_route53" {
+  name   = "${var.app_name}-list-rout53"
+  path   = "/"
+  policy = data.aws_iam_policy_document.list_route53.json
+  tags   = local.common_tags
+}
+
+data "aws_iam_policy_document" "list_route53" {
   statement {
     sid = "ListHostedZones"
     actions = [
