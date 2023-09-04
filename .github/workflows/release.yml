@@ -32,7 +32,7 @@ jobs:
           terraform fmt -check terraform/infrastructure
 
       - name: setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 18.x
 
