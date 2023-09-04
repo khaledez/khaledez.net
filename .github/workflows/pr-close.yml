@@ -8,22 +8,22 @@ jobs:
     name: delete created website
     runs-on: ubuntu-20.04
     env:
-      domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
-      cert_domain: "*.dev.khaledez.net"
+      domain_name: ${{ format('pr-{0}.preview.khaledez.net', github.event.pull_request.number) }}
+      cert_domain: "*.preview.khaledez.net"
     steps:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::427368570714:role/net.khaledez.www-github-actions
           aws-region: eu-west-2 # London
 
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.1.x
+          terraform_version: 1.5.x
 
       - name: Setup configuration
         run: |

@@ -2,6 +2,10 @@ name: PR website
 on:
   - pull_request
 
+concurrency: 
+  cancel-in-progress: true
+  group: ${{github.event.pull_request.number}}
+
 jobs:
   check-and-preview:
     uses: ./.github/workflows/build-and-deploy.yml
