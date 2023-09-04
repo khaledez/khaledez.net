@@ -28,6 +28,7 @@ data "aws_iam_policy_document" "cf_logs_policy" {
       identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
     }
     actions = [
+      "s3:ListBucket",
       "s3:GetBucketAcl",
       "s3:PutBucketAcl"
     ]
@@ -52,10 +53,6 @@ resource "aws_s3_bucket_acl" "cf_logs" {
         uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
       }
       permission = "FULL_CONTROL"
-    }
-
-    owner {
-      id = "427368570714"
     }
   }
 }
