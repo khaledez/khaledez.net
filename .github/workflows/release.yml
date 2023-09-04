@@ -4,74 +4,11 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   release:
-    name: build and publish
-    runs-on: ubuntu-20.04
-    env:
+    uses: ./.github/workflows/build-and-deploy.yml
+    with:
+      environment: prod
       domain_name: khaledez.net
-      aliases: '["www.khaledez.net"]'
       cert_domain: "khaledez.net"
-      terraform_dir: "terraform/static-website"
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.x
-
-      - name: Terraform format check
-        run: |
-          terraform fmt -check ${{ env.terraform_dir }}
-          terraform fmt -check terraform/infrastructure
-
-      - name: setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-
-      - name: npm install
-        run: |
-          npm install
-        env:
-          CI: true
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          audience: sts.amazonaws.com
-          role-to-assume: arn:aws:iam::427368570714:role/net.khaledez.www-github-actions
-          aws-region: eu-west-2 # London
-      
-      - name: Setup configuration
-        run: |
-          echo 'env_name=prod' > please.env
-          echo 'domain_name=${{ env.domain_name }}' >> please.env
-
-      - name: Terraform init
-        run: sh ./please init
-
-      - name: Terraform Validate
-        run: |
-          pushd ${{ env.terraform_dir }}
-          terraform validate 
-          popd
-
-      - name: Terraform apply
-        run: sh ./please sync
-        env:
-          TF_VAR_cert_domain: ${{ env.cert_domain }}
-          TF_VAR_domain_aliases: ${{ env.aliases }}
-          TF_VAR_cache_ttl: 3600
-
-      - name: Build website
-        run: sh ./please build
-      
-      - name: Deploy website
-        run: sh ./please deploy
+      domain_aliases: '["www.khaledez.net"]'

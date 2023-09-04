@@ -1,0 +1,90 @@
+name: Build and deploy
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      domain_name:
+        required: true
+        type: string
+      cert_domain:
+        required: true
+        type: string
+      domain_aliases:
+        type: string
+        required: false
+        default: ""
+      cache_ttl:
+        required: false
+        type: number
+        default: 0
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-deploy:
+    name: build and publish
+    runs-on: ubuntu-20.04
+    env:
+      terraform_dir: "terraform/static-website"
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.x
+
+      - name: Terraform format check
+        run: |
+          terraform fmt -check ${{ env.terraform_dir }}
+          terraform fmt -check terraform/infrastructure
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: npm install
+        run: |
+          npm install
+        env:
+          CI: true
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::427368570714:role/net.khaledez.www-github-actions
+          aws-region: eu-west-2 # London
+      
+      - name: Setup configuration
+        run: |
+          echo 'env_name=${{ inputs.environment }}' > please.env
+          echo 'domain_name=${{ inputs.domain_name }}' >> please.env
+
+      - name: Terraform init
+        run: sh ./please init
+
+      - name: Terraform Validate
+        run: |
+          pushd ${{ env.terraform_dir }}
+          terraform validate 
+          popd
+
+      - name: Terraform apply
+        run: sh ./please sync
+        env:
+          TF_VAR_cert_domain: ${{ inputs.cert_domain }}
+          TF_VAR_domain_aliases: ${{ inputs.domain_aliases }}
+          TF_VAR_cache_ttl: ${{ inputs.cache_ttl }}
+
+      - name: Build website
+        run: sh ./please build
+      
+      - name: Deploy website
+        run: sh ./please deploy
