@@ -22,24 +22,15 @@ data "aws_iam_policy_document" "cf_logs_policy" {
   }
 
   statement {
-    actions = [
-      "s3:ListBucket",
-      "s3:GetBucketAcl",
-      "s3:PutBucketAcl"
-    ]
     resources = [aws_s3_bucket.cf_logs.arn]
-
     principals {
       type        = "AWS"
       identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
     }
-  }
-}
-
-resource "aws_s3_bucket_ownership_controls" "cf_logs" {
-  bucket = aws_s3_bucket.cf_logs.id
-  rule {
-    object_ownership = "BucketOwnerPreferred"
+    actions = [
+      "s3:GetBucketAcl",
+      "s3:PutBucketAcl"
+    ]
   }
 }
 
@@ -47,6 +38,18 @@ resource "aws_s3_bucket_acl" "cf_logs" {
   depends_on = [aws_s3_bucket_ownership_controls.cf_logs]
 
   bucket = aws_s3_bucket.cf_logs.id
-  acl    = "private"
+  access_control_policy {
+    grant {
+      grantee {
+        type = "Group"
+        uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
+      }
+      permission = "FULL_CONTROL"
+    }
+
+    owner {
+      id = "427368570714"
+    }
+  }
 }
 
