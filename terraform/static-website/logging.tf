@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "cf_logs" {
-  bucket = "${var.app_name}-logs"
+  bucket = "${var.domain_name}-logs"
 
   tags = local.common_tags
 }
