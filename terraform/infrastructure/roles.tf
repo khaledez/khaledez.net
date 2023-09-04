@@ -64,12 +64,19 @@ data "aws_iam_policy_document" "manage_domain" {
     sid = "ManageRoute53Domain"
     actions = [
       "route53:GetHostedZone",
-      "route53:ListHostedZones",
       "route53:ChangeResourceRecordSets",
       "route53:ListResourceRecordSets",
       "route53:GetHostedZoneCount",
-      "route53:ListHostedZonesByName"
+      "route53:ListTagsForResource"
     ]
     resources = [data.aws_route53_zone.primary.arn]
+  }
+  statement {
+    sid = "ListHostedZones"
+    actions = [
+      "route53:ListHostedZones",
+      "route53:ListHostedZonesByName"
+    ]
+    resources = ["*"]
   }
 }
