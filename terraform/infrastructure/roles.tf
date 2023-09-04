@@ -42,22 +42,14 @@ resource "aws_iam_role" "github-actions" {
     "arn:aws:iam::aws:policy/AmazonRoute53ReadOnlyAccess"
   ]
 
+  inline_policy {
+    name   = "${var.app_name}-manage-domain"
+    policy = data.aws_iam_policy_document.manage_domain.json
+  }
+
   lifecycle {
     create_before_destroy = true
   }
-}
-
-resource "aws_iam_policy_attachment" "manage_domain" {
-  name       = "${var.app_name}-manage-domain"
-  roles      = [aws_iam_role.github-actions.name]
-  policy_arn = aws_iam_policy.manage_domain.arn
-}
-
-resource "aws_iam_policy" "manage_domain" {
-  name   = "${var.app_name}-manage-domain"
-  path   = "/"
-  policy = data.aws_iam_policy_document.manage_domain.json
-  tags   = local.common_tags
 }
 
 data "aws_iam_policy_document" "manage_domain" {
