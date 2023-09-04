@@ -10,7 +10,7 @@ variable "domain_aliases" {
 
 variable "cert_domain" {
   description = "ACM domain name"
-  default     = "*.dev.khaledez.net"
+  default     = "*.preview.khaledez.net"
 }
 
 variable "dns_zone_domain" {

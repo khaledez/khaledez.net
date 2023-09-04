@@ -1,6 +1,5 @@
 resource "aws_s3_bucket" "cf_logs" {
-  bucket        = "${var.app_name}-logs"
-  force_destroy = true
+  bucket = "${var.app_name}-logs"
 
   tags = local.common_tags
 }

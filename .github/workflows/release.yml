@@ -12,3 +12,4 @@ jobs:
       domain_name: khaledez.net
       cert_domain: "khaledez.net"
       domain_aliases: '["www.khaledez.net"]'
+      cache_ttl: 3600
