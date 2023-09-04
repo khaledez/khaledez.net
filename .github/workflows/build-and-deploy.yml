@@ -14,7 +14,7 @@ on:
       domain_aliases:
         type: string
         required: false
-        default: ""
+        default: "[]"
       cache_ttl:
         required: false
         type: number
