@@ -2,67 +2,15 @@ name: PR website
 on:
   - pull_request
 
+concurrency: 
+  cancel-in-progress: true
+  group: ${{github.event.pull_request.number}}
+
 jobs:
-  build:
-    name: build and deploy
-    runs-on: ubuntu-20.04
-    env:
-      domain_name: ${{ format('pr-{0}.dev.khaledez.net', github.event.pull_request.number) }}
-      cert_domain: "*.dev.khaledez.net"
-      terraform_dir: "terraform/static-website"
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-      
-      - uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.1.x
-
-      - name: Terraform Format
-        run: |
-          terraform fmt -check ${{ env.terraform_dir }}
-          terraform fmt -check terraform/infrastructure
-
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
-
-      - name: npm install
-        run: |
-          npm install
-        env:
-          CI: true
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-2 # London
-      
-      - name: Setup configuration
-        run: |
-          echo 'env_name=dev' > please.env
-          echo 'domain_name=${{ env.domain_name }}' >> please.env
-
-      - name: Terraform init
-        run: sh ./please init
-
-      - name: Terraform Validate
-        run: |
-          pushd ${{ env.terraform_dir }}
-          terraform validate 
-          popd
-
-      - name: Terraform apply
-        run: sh ./please sync
-        env:
-          TF_VAR_cert_domain: ${{ env.cert_domain }}
-
-      - name: Build website
-        run: sh ./please build
-      
-      - name: Deploy website
-        run: sh ./please deploy
+  check-and-preview:
+    uses: ./.github/workflows/build-and-deploy.yml
+    with:
+      environment: dev
+      domain_name: ${{ format('pr-{0}.preview.khaledez.net', github.event.pull_request.number) }}
+      cert_domain: "*.preview.khaledez.net"
+  

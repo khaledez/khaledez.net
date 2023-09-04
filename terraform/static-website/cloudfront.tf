@@ -69,7 +69,6 @@ resource "aws_cloudfront_distribution" "cf_website" {
   logging_config {
     bucket          = aws_s3_bucket.cf_logs.bucket_domain_name
     include_cookies = true
-    prefix          = "${var.environment}-${var.domain_name}"
   }
 }
 
