@@ -24,7 +24,7 @@ jobs:
 
       - uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.1.x
+          terraform_version: 1.5.x
 
       - name: Terraform format check
         run: |
@@ -46,7 +46,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           audience: sts.amazonaws.com
-          role-to-assume: arn:aws:iam::427368570714:net.khaledez.www-github-actions
+          role-to-assume: arn:aws:iam::427368570714:role/net.khaledez.www-github-actions
           aws-region: eu-west-2 # London
       
       - name: Setup configuration
