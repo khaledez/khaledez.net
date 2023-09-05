@@ -1,4 +1,5 @@
 data "aws_canonical_user_id" "current" {}
+data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "cf_logs" {
   bucket        = "${var.domain_name}-logs"
@@ -7,12 +8,12 @@ resource "aws_s3_bucket" "cf_logs" {
   tags = local.common_tags
 }
 
-resource "aws_s3_bucket_policy" "cf_logs_policy" {
+resource "aws_s3_bucket_policy" "cf_logs" {
   bucket = aws_s3_bucket.cf_logs.id
-  policy = data.aws_iam_policy_document.cf_logs_policy.json
+  policy = data.aws_iam_policy_document.cf_logs.json
 }
 
-data "aws_iam_policy_document" "cf_logs_policy" {
+data "aws_iam_policy_document" "cf_logs" {
   statement {
     actions   = ["s3:*Object"]
     resources = ["${aws_s3_bucket.cf_logs.arn}/*"]
@@ -34,6 +35,15 @@ data "aws_iam_policy_document" "cf_logs_policy" {
       "s3:GetBucketAcl",
       "s3:PutBucketAcl"
     ]
+  }
+
+  statement {
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.cf_logs.arn]
+    principals {
+      type        = "AWS"
+      identifiers = [data.aws_caller_identity.current.arn]
+    }
   }
 }
 
