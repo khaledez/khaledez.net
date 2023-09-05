@@ -3,6 +3,10 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   delete:
     name: delete created website

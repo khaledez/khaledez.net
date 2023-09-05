@@ -1,3 +1,5 @@
+data "aws_canonical_user_id" "current" {}
+
 resource "aws_s3_bucket" "cf_logs" {
   bucket        = "${var.domain_name}-logs"
   force_destroy = true
@@ -22,17 +24,16 @@ data "aws_iam_policy_document" "cf_logs_policy" {
   }
 
   statement {
+    resources = [aws_s3_bucket.cf_logs.arn]
+    principals {
+      type        = "AWS"
+      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
+    }
     actions = [
       "s3:ListBucket",
       "s3:GetBucketAcl",
       "s3:PutBucketAcl"
     ]
-    resources = [aws_s3_bucket.cf_logs.arn]
-
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn]
-    }
   }
 }
 
@@ -47,6 +48,17 @@ resource "aws_s3_bucket_acl" "cf_logs" {
   depends_on = [aws_s3_bucket_ownership_controls.cf_logs]
 
   bucket = aws_s3_bucket.cf_logs.id
-  acl    = "private"
+  access_control_policy {
+    grant {
+      grantee {
+        type = "Group"
+        uri  = "http://acs.amazonaws.com/groups/s3/LogDelivery"
+      }
+      permission = "FULL_CONTROL"
+    }
+    owner {
+      id = data.aws_canonical_user_id.current.id
+    }
+  }
 }
 

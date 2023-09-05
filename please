@@ -9,6 +9,10 @@ domain_name=local.dev.khaledez.net
 
 # shellcheck source=/dev/null
 . ./please.env
+if [ -e .env ]; then
+    # shellcheck source=/dev/null
+    . .env
+fi
 
 # common functions
 
@@ -61,7 +65,7 @@ die() {
 
     command_deploy() {
         aws s3 rm "s3://$domain_name" --recursive
-        aws s3 sync dist/ "s3://$domain_name" 
+        aws s3 sync dist/ "s3://$domain_name"
     }
 
     command_build() {
