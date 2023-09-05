@@ -1,3 +1,5 @@
+data "aws_canonical_user_id" "current" {}
+
 resource "aws_s3_bucket" "cf_logs" {
   bucket        = "${var.domain_name}-logs"
   force_destroy = true
@@ -55,7 +57,7 @@ resource "aws_s3_bucket_acl" "cf_logs" {
       permission = "FULL_CONTROL"
     }
     owner {
-      id = "427368570714"
+      id = data.aws_canonical_user_id.current.id
     }
   }
 }
