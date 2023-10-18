@@ -9,7 +9,7 @@
 		<item>
 			<title>Door Cam</title>
 			<description>Door Cam</description>
-			<link>rtsp://admin:admin123@192.168.1.200/cam/realmonitor?channel=1&amp;subtype=0</link>
+			<link>rtsp://admin:admin123@192.168.80.200/cam/realmonitor?channel=1&amp;subtype=0</link>
 		</item>
 
 	</channel>
